@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Primary Meta Tags -->
+  <title>AITSQL - AI-Powered SQL Server Tools & Consulting</title>
+  <meta name="title" content="AITSQL - AI-Powered SQL Server Tools & Consulting">
+  <meta name="description" content="SQL Server expertise meets AI. Tools, scripts, consulting, and insights for database professionals working with T-SQL and SQL Server.">
+  <meta name="keywords" content="SQL Server, T-SQL, database consulting, AI SQL tools, query optimization, SSRS, SSIS, database administration">
+  <meta name="author" content="AITSQL">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aitsql.com/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://aitsql.com/">
+  <meta property="og:title" content="AITSQL - AI-Powered SQL Server Tools & Consulting">
+  <meta property="og:description" content="SQL Server expertise meets AI. Tools, scripts, consulting, and insights for database professionals.">
+  <meta property="og:site_name" content="AITSQL">
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="AITSQL - AI-Powered SQL Server Tools & Consulting">
+  <meta name="twitter:description" content="SQL Server expertise meets AI. Tools, scripts, and consulting.">
+
+  <meta name="theme-color" content="#0ea5e9">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "AITSQL",
+    "url": "https://aitsql.com/",
+    "description": "AI-powered SQL Server tools, scripts, consulting, and technical articles",
+    "author": {
+      "@type": "Person",
+      "name": "Tom"
+    }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">AI</div>
+        <div class="logo-text">AITSQL<span>.com</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="#sandbox" style="color: #38bdf8;">SQL Sandbox</a>
+        <a href="#tools">Tools</a>
+        <a href="#scripts">Scripts</a>
+        <a href="#consulting">Consulting</a>
+        <a href="#blog">Blog</a>
+        <a href="#contact" class="btn-nav">Get in Touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-badge fade-up">
+        <span class="dot"></span>
+        Demo / Pre-Launch Preview
+      </div>
+      <h1 class="fade-up fade-up-d1">
+        Smarter <span class="gradient-text">SQL Server</span><br>
+        starts here.
+      </h1>
+      <p class="hero-sub fade-up fade-up-d2">
+        Paste your T-SQL. We'll reverse-engineer the data model, generate realistic
+        test data, and give you a sandbox to validate your scripts — without
+        touching production. AI-powered tools for the DBA, analyst, and accidental developer alike.
+      </p>
+      <div class="hero-cta fade-up fade-up-d3">
+        <a href="#sandbox" class="btn btn-primary">Try the SQL Sandbox</a>
+        <a href="#tools" class="btn btn-outline">All Tools</a>
+        <a href="#consulting" class="btn btn-outline">Consulting</a>
+      </div>
+
+      <div class="hero-code fade-up fade-up-d4">
+        <div class="hero-code-bar">
+          <div class="dot-r"></div>
+          <div class="dot-y"></div>
+          <div class="dot-g"></div>
+          <span>query-optimizer.sql</span>
+        </div>
+        <pre><code><span class="cm">-- AI-assisted query analysis</span>
+<span class="kw">SELECT</span> t.<span class="fn">name</span> <span class="kw">AS</span> TableName,
+       i.<span class="fn">name</span> <span class="kw">AS</span> IndexName,
+       s.user_seeks + s.user_scans <span class="kw">AS</span> TotalReads,
+       s.user_updates <span class="kw">AS</span> TotalWrites
+<span class="kw">FROM</span> sys.dm_db_index_usage_stats s
+<span class="kw">JOIN</span> sys.tables t <span class="kw">ON</span> s.object_id = t.object_id
+<span class="kw">WHERE</span> s.database_id = <span class="fn">DB_ID</span>()
+<span class="kw">ORDER BY</span> TotalReads <span class="kw">DESC</span>;</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="section-alt">
+    <div class="container">
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-value">15+</span>
+          <span class="stat-label">Years SQL Server</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">500+</span>
+          <span class="stat-label">Scripts & Queries</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">T-SQL</span>
+          <span class="stat-label">Specialization</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">AI</span>
+          <span class="stat-label">Enhanced Workflows</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SQL Sandbox -->
+  <section id="sandbox" class="sandbox-section">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Flagship Tool</div>
+        <h2>The SQL Sandbox</h2>
+        <p>Paste your query. Get a working test environment in seconds.</p>
+      </div>
+
+      <div class="sandbox-hero">
+        <div class="sandbox-steps">
+          <div class="sandbox-step">
+            <div class="sandbox-step-num">1</div>
+            <h3>Paste Your T-SQL</h3>
+            <p>Drop in any query — stored procedures, reports, ad-hoc scripts. Even that hasty query from 2019 that somehow became mission-critical.</p>
+          </div>
+          <div class="sandbox-step">
+            <div class="sandbox-step-num">2</div>
+            <h3>AI Extrapolates the Data Model</h3>
+            <p>We reverse-engineer the tables, columns, relationships, and data types your script expects. No schema file needed.</p>
+          </div>
+          <div class="sandbox-step">
+            <div class="sandbox-step-num">3</div>
+            <h3>Demo Data Generated</h3>
+            <p>Realistic test data is created to match your schema — proper foreign keys, realistic distributions, edge cases included.</p>
+          </div>
+          <div class="sandbox-step">
+            <div class="sandbox-step-num">4</div>
+            <h3>Test Offsite, Ship Confidently</h3>
+            <p>Run, debug, and refactor your script against the sandbox. No production risk. No DBA breathing down your neck.</p>
+          </div>
+        </div>
+
+        <div class="sandbox-pitch">
+          <div class="sandbox-pitch-card">
+            <h3>Built for the people who actually write SQL at work</h3>
+            <p>Business analysts stitching together reports. Admins who inherited a stored procedure graveyard. Developers who need to test a migration script but can't get a dev environment. You wrote something that worked — now AI helps you make it robust, documented, and production-ready.</p>
+            <div class="sandbox-pitch-tags">
+              <span class="tool-badge">Business Analysts</span>
+              <span class="tool-badge">DBAs</span>
+              <span class="tool-badge">SIS Admins</span>
+              <span class="tool-badge">Report Writers</span>
+              <span class="tool-badge">Accidental Developers</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI Tools -->
+  <section id="tools">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">AI Tools</div>
+        <h2>Intelligence for your database</h2>
+        <p>AI-powered tools that understand T-SQL and SQL Server internals, built by someone who uses them daily.</p>
+      </div>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>⚡ Query Analyzer</h3>
+          <p class="tool-desc">Paste any T-SQL query and get AI-powered analysis — performance bottlenecks, missing indexes, rewrite suggestions, and execution plan insights.</p>
+          <div class="tool-meta">
+            <span class="tool-badge">T-SQL</span>
+            <span class="tool-badge">Performance</span>
+            <span class="tool-badge">AI</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h3>🔍 Index Advisor</h3>
+          <p class="tool-desc">Upload your workload patterns and get intelligent index recommendations. Identifies redundant, unused, and missing indexes across your databases.</p>
+          <div class="tool-meta">
+            <span class="tool-badge">Indexing</span>
+            <span class="tool-badge">DMVs</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h3>📊 Schema Documenter</h3>
+          <p class="tool-desc">Auto-generate comprehensive documentation from your database schema. Tables, relationships, dependencies, and data dictionaries in seconds.</p>
+          <div class="tool-meta">
+            <span class="tool-badge">Documentation</span>
+            <span class="tool-badge">Schema</span>
+          </div>
+        </div>
+        <div class="tool-card">
+          <h3>🛡️ Security Auditor</h3>
+          <p class="tool-desc">Scan your SQL Server permissions and identify security gaps. Role hierarchies, orphaned users, excessive privileges — all flagged with remediation steps.</p>
+          <div class="tool-meta">
+            <span class="tool-badge">Security</span>
+            <span class="tool-badge">Audit</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Script Library -->
+  <section id="scripts" class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Script Library</div>
+        <h2>Production-ready T-SQL</h2>
+        <p>Curated scripts for common SQL Server tasks — tested, documented, and ready to deploy.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Performance & Tuning</h3>
+          <p>Query store analysis, wait statistics, blocking chain detection, tempdb monitoring, and resource governor configs.</p>
+          <span class="feature-tag">25+ scripts</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Security & Permissions</h3>
+          <p>Role audits, permission matrices, login migrations, TDE setup, row-level security templates, and compliance checks.</p>
+          <span class="feature-tag">20+ scripts</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔄</div>
+          <h3>ETL & Integration</h3>
+          <p>BCP patterns, SSIS helpers, linked server configs, bulk import templates, and data migration frameworks.</p>
+          <span class="feature-tag">15+ scripts</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🏥</div>
+          <h3>Health & Maintenance</h3>
+          <p>Backup verification, integrity checks, index maintenance, statistics updates, and automated alerting scripts.</p>
+          <span class="feature-tag">30+ scripts</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Reporting & Analysis</h3>
+          <p>SSRS templates, cross-database reporting, pivot patterns, dynamic SQL generators, and data profiling utilities.</p>
+          <span class="feature-tag">20+ scripts</span>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎓</div>
+          <h3>Higher Education</h3>
+          <p>SIS integration patterns, IPEDS reporting, enrollment analytics, financial aid queries, and programmatic review automation.</p>
+          <span class="feature-tag">15+ scripts</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Consulting -->
+  <section id="consulting">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Consulting</div>
+        <h2>Hands-on SQL Server expertise</h2>
+        <p>From performance crises to migration planning — practical consulting grounded in real-world experience.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-icon">⚡</div>
+          <h3>Performance Tuning</h3>
+          <p>Deep-dive query optimization, execution plan analysis, index strategy, and server configuration for maximum throughput.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🔄</div>
+          <h3>Migration & Upgrades</h3>
+          <p>SQL Server version upgrades, platform migrations, compatibility testing, and zero-downtime deployment strategies.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-icon">🏗️</div>
+          <h3>Architecture & Design</h3>
+          <p>Database design reviews, normalization analysis, reporting architecture, SSIS/SSRS implementation, and automation pipelines.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog -->
+  <section id="blog" class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Blog</div>
+        <h2>SQL Server insights</h2>
+        <p>Deep dives into T-SQL patterns, performance tuning, and AI-assisted database workflows.</p>
+      </div>
+      <div class="blog-grid">
+        <article class="blog-card">
+          <div class="blog-card-body">
+            <div class="blog-date">Coming Soon</div>
+            <h3>BCP Export Patterns That Actually Work</h3>
+            <p>The specific three-part naming, tempdb schema patterns, and UNION ALL gotchas that trip everyone up.</p>
+            <span class="read-more">Read article →</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-card-body">
+            <div class="blog-date">Coming Soon</div>
+            <h3>Dynamic SQL for Programmatic Reviews</h3>
+            <p>Building flexible, parameterized review queries that adapt to changing program structures and accreditation requirements.</p>
+            <span class="read-more">Read article →</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-card-body">
+            <div class="blog-date">Coming Soon</div>
+            <h3>AI Meets T-SQL: Practical Workflows</h3>
+            <p>How to use AI tools alongside your existing SQL Server workflow — not to replace your expertise, but to amplify it.</p>
+            <span class="read-more">Read article →</span>
+          </div>
+        </article>
+        <article class="blog-card">
+          <div class="blog-card-body">
+            <div class="blog-date">Coming Soon</div>
+            <h3>How to Use AI in SSMS</h3>
+            <p>Copilot in Azure Data Studio, GitHub Copilot extensions, AI-assisted query writing, execution plan analysis, and prompt patterns that actually work inside your daily SSMS workflow.</p>
+            <span class="read-more">Read article →</span>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section id="contact" class="cta-section">
+    <div class="container">
+      <h2>Let's solve your SQL problems.</h2>
+      <p>Whether you need a quick query review or a full database overhaul, I can help.</p>
+      <a href="mailto:tom@aitsql.com" class="btn btn-primary">Get in Touch →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          AITSQL.com <span>AI + T-SQL</span>
+        </div>
+        <div class="footer-links">
+          <a href="#sandbox">SQL Sandbox</a>
+          <a href="#tools">Tools</a>
+          <a href="#scripts">Scripts</a>
+          <a href="#consulting">Consulting</a>
+          <a href="#blog">Blog</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div class="footer-legal">
+        <div class="disclaimer">
+          <strong>⚠️ Pre-Launch Preview:</strong> AITSQL is currently in development. Tools and features shown are previews and may change before official launch. AI-generated suggestions should always be reviewed by a qualified professional before use in production environments.
+        </div>
+        <div class="legal-links">
+          <a href="#" id="termsLink">Terms of Service</a>
+          <span class="legal-divider">|</span>
+          <a href="#" id="privacyLink">Privacy Policy</a>
+          <span class="legal-divider">|</span>
+          <a href="#" id="disclaimerLink">Disclaimer</a>
+        </div>
+        <p class="copyright">&copy; 2026 AITSQL.com. All rights reserved. Not affiliated with Microsoft Corporation.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Terms of Service Modal -->
+  <div class="legal-modal" id="termsModal">
+    <div class="legal-modal-content">
+      <button class="legal-modal-close" onclick="closeLegalModal('termsModal')">&times;</button>
+      <h2>Terms of Service</h2>
+      <div class="legal-text">
+        <p><strong>Last Updated:</strong> February 2026</p>
+        <p><strong>1. Acceptance of Terms.</strong> By accessing and using AITSQL.com, you agree to be bound by these Terms of Service. If you do not agree, do not use this site.</p>
+        <p><strong>2. Pre-Launch Status.</strong> AITSQL is currently in a pre-launch preview phase. Features, tools, and content are subject to change without notice. No guarantees of availability, uptime, or feature completeness are made during this period.</p>
+        <p><strong>3. AI-Generated Content.</strong> Tools on this site use artificial intelligence to analyze SQL code and generate suggestions. AI output is provided as-is and may contain errors, inaccuracies, or suboptimal recommendations. All AI-generated content should be independently reviewed and validated before use in any environment, especially production systems.</p>
+        <p><strong>4. No Warranty.</strong> AITSQL is provided "as is" without warranties of any kind, express or implied. We do not warrant that the tools will be error-free, secure, or uninterrupted.</p>
+        <p><strong>5. User Responsibility.</strong> You are solely responsible for any SQL code you paste into our tools. Do not submit proprietary, confidential, or sensitive data. You are responsible for reviewing and testing any suggestions before implementation.</p>
+        <p><strong>6. Limitation of Liability.</strong> AITSQL and its operators shall not be liable for any damages arising from the use of this site, its tools, or any AI-generated recommendations, including but not limited to data loss, system downtime, or security incidents.</p>
+        <p><strong>7. Intellectual Property.</strong> Scripts and tools provided on this site are the intellectual property of AITSQL. Free scripts may be used in accordance with their stated license. You retain ownership of any code you submit to our tools.</p>
+        <p><strong>8. Not Professional Advice.</strong> Content on AITSQL is for informational and educational purposes only. It does not constitute professional database administration, consulting, or technical advice.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="legal-modal" id="privacyModal">
+    <div class="legal-modal-content">
+      <button class="legal-modal-close" onclick="closeLegalModal('privacyModal')">&times;</button>
+      <h2>Privacy Policy</h2>
+      <div class="legal-text">
+        <p><strong>Last Updated:</strong> February 2026</p>
+        <p><strong>Data Collection.</strong> AITSQL collects minimal data. We may use analytics (Google Analytics) to understand site usage patterns. We do not sell or share personal information with third parties.</p>
+        <p><strong>SQL Code Submissions.</strong> Code pasted into our AI tools is processed to generate analysis and suggestions. We do not permanently store submitted SQL code. Do not submit code containing sensitive data, credentials, connection strings, or personally identifiable information.</p>
+        <p><strong>Cookies.</strong> This site may use essential cookies for site functionality and analytics cookies to improve the user experience.</p>
+        <p><strong>Contact.</strong> For privacy questions, contact us through the site's contact form.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disclaimer Modal -->
+  <div class="legal-modal" id="disclaimerModal">
+    <div class="legal-modal-content">
+      <button class="legal-modal-close" onclick="closeLegalModal('disclaimerModal')">&times;</button>
+      <h2>Disclaimer</h2>
+      <div class="legal-text">
+        <p><strong>General Disclaimer.</strong> AITSQL is an independent project and is not affiliated with, endorsed by, or sponsored by Microsoft Corporation. SQL Server, T-SQL, SSRS, SSIS, and related trademarks are the property of Microsoft Corporation.</p>
+        <p><strong>AI Accuracy.</strong> AI-powered tools provide suggestions based on pattern recognition and language models. These suggestions may be incomplete, incorrect, or inappropriate for your specific use case. Always test in a non-production environment first.</p>
+        <p><strong>No Guarantee of Results.</strong> We make no guarantees about the performance improvements, security enhancements, or other outcomes from using our tools, scripts, or consulting recommendations.</p>
+        <p><strong>Use at Your Own Risk.</strong> Any scripts, queries, or configurations obtained from AITSQL are used at your own risk. Always maintain proper backups and test changes in a safe environment before applying to production systems.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    // Navbar scroll effect
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection observer for fade-in on scroll
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .tool-card, .service-card, .blog-card, .sandbox-step, .sandbox-pitch-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.5s ease';
+      observer.observe(el);
+    });
+
+    // Legal modals
+    function openLegalModal(id) {
+      document.getElementById(id).classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLegalModal(id) {
+      document.getElementById(id).classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('termsLink').addEventListener('click', e => { e.preventDefault(); openLegalModal('termsModal'); });
+    document.getElementById('privacyLink').addEventListener('click', e => { e.preventDefault(); openLegalModal('privacyModal'); });
+    document.getElementById('disclaimerLink').addEventListener('click', e => { e.preventDefault(); openLegalModal('disclaimerModal'); });
+
+    // Close modal on backdrop click
+    document.querySelectorAll('.legal-modal').forEach(modal => {
+      modal.addEventListener('click', e => {
+        if (e.target === modal) closeLegalModal(modal.id);
+      });
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        document.querySelectorAll('.legal-modal.open').forEach(m => closeLegalModal(m.id));
+      }
+    });
+  </script>
+
+</body>
+</html>
