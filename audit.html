@@ -390,6 +390,7 @@
         <a href="index.html#tools">Tools</a>
         <a href="audit.html" style="color: #38bdf8;">Audit Tool</a>
         <a href="index.html#blog">Blog</a>
+        <a href="javascript:void(0)" onclick="openSearch()" title="Search (Ctrl+K)">🔍 Search</a>
         <a href="index.html#contact" class="btn-nav">Get in Touch</a>
       </div>
     </div>
@@ -703,6 +704,63 @@
       </div>
     </div>
   </footer>
+
+  <!-- Search Overlay -->
+  <style>
+    .search-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100000;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);padding:10vh 20px 20px;}
+    .search-overlay.open{display:block}
+    .search-container{max-width:640px;margin:0 auto}
+    .search-input-wrap{display:flex;align-items:center;background:#0f172a;border:1px solid rgba(14,165,233,.3);border-radius:12px;padding:0 16px;margin-bottom:16px}
+    .search-icon{font-size:1.2rem;margin-right:12px;opacity:.5}
+    .search-input{flex:1;background:none;border:none;color:#f0f0f0;font-size:1.1rem;padding:16px 0;outline:none;font-family:inherit}
+    .search-input::placeholder{color:rgba(255,255,255,.3)}
+    .search-close{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.8rem;font-family:inherit}
+    .search-close:hover{border-color:rgba(255,255,255,.3);color:#fff}
+    .search-results{max-height:60vh;overflow-y:auto}
+    .search-result-item{display:block;padding:14px 16px;border-radius:8px;text-decoration:none;color:#f0f0f0;transition:background .15s}
+    .search-result-item:hover{background:rgba(14,165,233,.1)}
+    .search-result-item h4{margin:0 0 4px;font-size:1rem;color:#fff}
+    .search-result-item p{margin:0;font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.4}
+    .result-tag{font-size:.7rem;color:#38bdf8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600}
+    .search-hint{text-align:center;color:rgba(255,255,255,.3);padding:40px 20px;font-size:.9rem}
+    .search-hint kbd{background:#0f172a;border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.15rem .5rem;font-size:.8rem;font-family:inherit}
+  </style>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search audit checks, methodology, tools..." autocomplete="off">
+        <button class="search-close" onclick="closeSearch()">ESC</button>
+      </div>
+      <div class="search-results" id="searchResults">
+        <div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const searchIndex=[
+      {title:'57-Check Audit Tool',desc:'Navigation consistency, missing pages, broken links, feature drift, mobile responsiveness, SEO validation.',tag:'Audit Tool',url:'#checks',keywords:'57 checks audit portfolio navigation links mobile seo features'},
+      {title:'Navigation Consistency',desc:'Verifies every page on every site has the same nav structure. Flags missing links, extra links, mismatched labels.',tag:'Audit Check',url:'#checks',keywords:'navigation consistency nav links labels menu'},
+      {title:'Page Inventory',desc:'Crawls directory structure and compares against sitemap and UATEST plan. Identifies orphaned pages.',tag:'Audit Check',url:'#checks',keywords:'page inventory sitemap crawl orphaned missing'},
+      {title:'Cross-Site Link Validation',desc:'Tests every internal and cross-site link. Webring links, footer links, in-page anchors.',tag:'Audit Check',url:'#checks',keywords:'cross-site links webring footer anchors dead broken'},
+      {title:'Mobile Responsiveness',desc:'Checks for display:none on nav elements, missing viewport meta, broken mobile menu patterns.',tag:'Audit Check',url:'#checks',keywords:'mobile responsive viewport hamburger menu display none'},
+      {title:'Feature Drift Detection',desc:'Compares current state against UATEST plan. Flags missing and undocumented features.',tag:'Audit Check',url:'#checks',keywords:'feature drift uatest plan documented missing'},
+      {title:'Shared Component Sync',desc:'Validates shared components (webring, analytics, footers) are identical across all sites.',tag:'Audit Check',url:'#checks',keywords:'shared component webring analytics footer sync diff'},
+      {title:'SEO & Sitemap Validation',desc:'Meta titles, descriptions, canonical URLs, robots.txt, sitemap.xml presence and URL validation.',tag:'Audit Check',url:'#checks',keywords:'seo sitemap meta title description canonical robots'},
+      {title:'Accessibility Baseline',desc:'Missing alt attributes, aria labels, color contrast, keyboard navigation basics.',tag:'Audit Check',url:'#checks',keywords:'accessibility alt aria contrast keyboard a11y'},
+      {title:'Methodology: Document → Scan → Report → Verify',desc:'Four-phase audit approach. UATEST plan first, then validate, fix, and re-verify.',tag:'Methodology',url:'#methodology',keywords:'methodology document scan report verify uatest plan phases'},
+      {title:'AIUNITES Case Study',desc:'18-site network audit. Navigation inconsistencies, webring versions, UATEST plan creation.',tag:'Case Study',url:'#case-study',keywords:'aiunites case study 18 sites network findings'},
+      {title:'Brand Independence',desc:'ERPise builds. AITSQL audits. ERPize reports. No conflict of interest.',tag:'Independence',url:'#independence',keywords:'brand independence erpise aitsql erpize conflict audit'},
+      {title:'AITSQL Home — AI Tools & Scripts',desc:'SQL Sandbox, Query Analyzer, Index Advisor, Schema Documenter, Security Auditor.',tag:'AITSQL',url:'index.html',keywords:'home tools sandbox analyzer index advisor schema security'},
+      {title:'ERPise — ERP Consulting',desc:'SIS implementation, SQL Server, SSIS, SSRS consulting for higher education.',tag:'Partner',url:'https://aiunites.github.io/erpise-site/',keywords:'erpise consulting sis higher education'},
+      {title:'ERPize — The ERP Magazine',desc:'News, tutorials, audit series, and industry coverage for ERP professionals.',tag:'Partner',url:'https://aiunites.github.io/erpize-site/',keywords:'erpize magazine articles audit series tutorials'}
+    ];
+    function openSearch(){document.getElementById('searchOverlay').classList.add('open');document.getElementById('searchInput').value='';document.getElementById('searchInput').focus();document.getElementById('searchResults').innerHTML='<div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>';document.body.style.overflow='hidden';}
+    function closeSearch(){document.getElementById('searchOverlay').classList.remove('open');document.body.style.overflow='';}
+    document.getElementById('searchInput').addEventListener('input',function(){var q=this.value.toLowerCase().trim(),r=document.getElementById('searchResults');if(!q){r.innerHTML='<div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>';return;}var m=searchIndex.filter(function(i){var h=(i.title+' '+i.desc+' '+i.keywords+' '+i.tag).toLowerCase();return q.split(/\s+/).every(function(w){return h.includes(w);});});if(!m.length){r.innerHTML='<div class="search-hint">No results for "'+q.replace(/</g,'&lt;')+'"</div>';return;}r.innerHTML=m.map(function(i){return'<a href="'+i.url+'" class="search-result-item" onclick="closeSearch()"><div class="result-tag">'+i.tag+'</div><h4>'+i.title+'</h4><p>'+i.desc+'</p></a>';}).join('');});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSearch();if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();openSearch();}});
+    document.getElementById('searchOverlay').addEventListener('click',function(e){if(e.target===this)closeSearch();});
+  </script>
 
   <script>
     // Navbar scroll
