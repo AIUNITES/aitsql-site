@@ -65,6 +65,7 @@
         <a href="#scripts">Scripts</a>
         <a href="#consulting">Consulting</a>
         <a href="#blog">Blog</a>
+        <a href="javascript:void(0)" onclick="openSearch()" title="Search (Ctrl+K)">🔍 Search</a>
         <a href="#contact" class="btn-nav">Get in Touch</a>
       </div>
     </div>
@@ -444,6 +445,68 @@
     </div>
   </div>
 
+  <!-- Search Overlay -->
+  <style>
+    .search-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100000;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);padding:10vh 20px 20px;}
+    .search-overlay.open{display:block}
+    .search-container{max-width:640px;margin:0 auto}
+    .search-input-wrap{display:flex;align-items:center;background:#0f172a;border:1px solid rgba(14,165,233,.3);border-radius:12px;padding:0 16px;margin-bottom:16px}
+    .search-icon{font-size:1.2rem;margin-right:12px;opacity:.5}
+    .search-input{flex:1;background:none;border:none;color:#f0f0f0;font-size:1.1rem;padding:16px 0;outline:none;font-family:inherit}
+    .search-input::placeholder{color:rgba(255,255,255,.3)}
+    .search-close{background:none;border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.5);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:.8rem;font-family:inherit}
+    .search-close:hover{border-color:rgba(255,255,255,.3);color:#fff}
+    .search-results{max-height:60vh;overflow-y:auto}
+    .search-result-item{display:block;padding:14px 16px;border-radius:8px;text-decoration:none;color:#f0f0f0;transition:background .15s}
+    .search-result-item:hover{background:rgba(14,165,233,.1)}
+    .search-result-item h4{margin:0 0 4px;font-size:1rem;color:#fff}
+    .search-result-item p{margin:0;font-size:.85rem;color:rgba(255,255,255,.5);line-height:1.4}
+    .result-tag{font-size:.7rem;color:#38bdf8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600}
+    .search-hint{text-align:center;color:rgba(255,255,255,.3);padding:40px 20px;font-size:.9rem}
+    .search-hint kbd{background:#0f172a;border:1px solid rgba(255,255,255,.1);border-radius:4px;padding:.15rem .5rem;font-size:.8rem;font-family:inherit}
+  </style>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search tools, scripts, articles..." autocomplete="off">
+        <button class="search-close" onclick="closeSearch()">ESC</button>
+      </div>
+      <div class="search-results" id="searchResults">
+        <div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const searchIndex=[
+      {title:'SQL Sandbox',desc:'Paste your T-SQL. AI reverse-engineers the data model, generates test data, and gives you a sandbox.',tag:'Flagship Tool',url:'#sandbox',keywords:'sandbox paste query test data model reverse engineer demo'},
+      {title:'Query Analyzer',desc:'AI-powered analysis of T-SQL queries — performance bottlenecks, missing indexes, rewrite suggestions.',tag:'AI Tool',url:'#tools',keywords:'query analyzer performance bottleneck index rewrite execution plan'},
+      {title:'Index Advisor',desc:'Intelligent index recommendations. Identifies redundant, unused, and missing indexes.',tag:'AI Tool',url:'#tools',keywords:'index advisor redundant unused missing recommendations dmv'},
+      {title:'Schema Documenter',desc:'Auto-generate documentation from your database schema. Tables, relationships, data dictionaries.',tag:'AI Tool',url:'#tools',keywords:'schema documenter documentation tables relationships data dictionary'},
+      {title:'Security Auditor',desc:'Scan SQL Server permissions. Role hierarchies, orphaned users, excessive privileges.',tag:'AI Tool',url:'#tools',keywords:'security auditor permissions roles orphaned users privileges'},
+      {title:'Web Portfolio Audit Tool',desc:'57-check audit for multi-site web portfolios. Navigation, links, features, mobile, SEO.',tag:'Audit Tool',url:'audit.html',keywords:'audit 57 checks portfolio navigation links mobile seo features'},
+      {title:'Performance & Tuning Scripts',desc:'Query store analysis, wait statistics, blocking chain detection, tempdb monitoring.',tag:'Script Library',url:'#scripts',keywords:'performance tuning query store wait statistics blocking tempdb'},
+      {title:'Security & Permissions Scripts',desc:'Role audits, permission matrices, login migrations, TDE setup, row-level security.',tag:'Script Library',url:'#scripts',keywords:'security permissions role audit login migration tde row level'},
+      {title:'ETL & Integration Scripts',desc:'BCP patterns, SSIS helpers, linked server configs, bulk import templates.',tag:'Script Library',url:'#scripts',keywords:'etl integration bcp ssis linked server bulk import'},
+      {title:'Health & Maintenance Scripts',desc:'Backup verification, integrity checks, index maintenance, statistics updates.',tag:'Script Library',url:'#scripts',keywords:'health maintenance backup integrity index statistics alerting'},
+      {title:'Reporting & Analysis Scripts',desc:'SSRS templates, cross-database reporting, pivot patterns, dynamic SQL generators.',tag:'Script Library',url:'#scripts',keywords:'reporting analysis ssrs pivot dynamic sql data profiling'},
+      {title:'Higher Education Scripts',desc:'SIS integration patterns, IPEDS reporting, enrollment analytics, financial aid queries.',tag:'Script Library',url:'#scripts',keywords:'higher education sis ipeds enrollment financial aid programmatic review'},
+      {title:'Performance Tuning Consulting',desc:'Deep-dive query optimization, execution plan analysis, index strategy, server configuration.',tag:'Consulting',url:'#consulting',keywords:'consulting performance tuning optimization execution plan'},
+      {title:'Migration & Upgrades Consulting',desc:'SQL Server version upgrades, platform migrations, compatibility testing, zero-downtime.',tag:'Consulting',url:'#consulting',keywords:'consulting migration upgrade compatibility zero downtime'},
+      {title:'Architecture & Design Consulting',desc:'Database design reviews, normalization, reporting architecture, SSIS/SSRS implementation.',tag:'Consulting',url:'#consulting',keywords:'consulting architecture design normalization ssis ssrs automation'},
+      {title:'BCP Export Patterns That Actually Work',desc:'Three-part naming, tempdb schema patterns, and UNION ALL gotchas.',tag:'Blog',url:'#blog',keywords:'bcp export tempdb schema union all naming'},
+      {title:'Dynamic SQL for Programmatic Reviews',desc:'Flexible, parameterized review queries for accreditation requirements.',tag:'Blog',url:'#blog',keywords:'dynamic sql programmatic review accreditation parameterized'},
+      {title:'AI Meets T-SQL: Practical Workflows',desc:'Using AI tools alongside your SQL Server workflow to amplify expertise.',tag:'Blog',url:'#blog',keywords:'ai t-sql workflow copilot practical'},
+      {title:'How to Use AI in SSMS',desc:'Copilot extensions, AI-assisted query writing, execution plan analysis, prompt patterns.',tag:'Blog',url:'#blog',keywords:'ai ssms copilot azure data studio prompt query writing'},
+      {title:'ERPise — ERP Consulting',desc:'SIS implementation, SQL Server, SSIS, SSRS consulting for higher education.',tag:'Partner',url:'https://aiunites.github.io/erpise-site/',keywords:'erpise consulting sis higher education'},
+      {title:'ERPize — The ERP Magazine',desc:'News, tutorials, audit series, and industry coverage for ERP professionals.',tag:'Partner',url:'https://aiunites.github.io/erpize-site/',keywords:'erpize magazine articles audit series tutorials'}
+    ];
+    function openSearch(){document.getElementById('searchOverlay').classList.add('open');document.getElementById('searchInput').value='';document.getElementById('searchInput').focus();document.getElementById('searchResults').innerHTML='<div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>';document.body.style.overflow='hidden';}
+    function closeSearch(){document.getElementById('searchOverlay').classList.remove('open');document.body.style.overflow='';}
+    document.getElementById('searchInput').addEventListener('input',function(){var q=this.value.toLowerCase().trim(),r=document.getElementById('searchResults');if(!q){r.innerHTML='<div class="search-hint">Start typing to search &middot; Press <kbd>ESC</kbd> to close</div>';return;}var m=searchIndex.filter(function(i){var h=(i.title+' '+i.desc+' '+i.keywords+' '+i.tag).toLowerCase();return q.split(/\s+/).every(function(w){return h.includes(w);});});if(!m.length){r.innerHTML='<div class="search-hint">No results for "'+q.replace(/</g,'&lt;')+'"</div>';return;}r.innerHTML=m.map(function(i){return'<a href="'+i.url+'" class="search-result-item" onclick="closeSearch()"><div class="result-tag">'+i.tag+'</div><h4>'+i.title+'</h4><p>'+i.desc+'</p></a>';}).join('');});
+    document.getElementById('searchOverlay').addEventListener('click',function(e){if(e.target===this)closeSearch();});
+  </script>
+
   <!-- Scripts -->
   <script>
     // Navbar scroll effect
@@ -500,11 +563,13 @@
       });
     });
 
-    // Close modal on Escape
+    // Close modal on Escape + search shortcut
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape') {
+        closeSearch();
         document.querySelectorAll('.legal-modal.open').forEach(m => closeLegalModal(m.id));
       }
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
     });
   </script>
 
