@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Web Portfolio Audit Tool — AITSQL</title>
+  <meta name="title" content="Web Portfolio Audit Tool — AITSQL">
+  <meta name="description" content="Systematic audit tool for multi-site web portfolios. Checks navigation consistency, missing pages, broken links, feature drift, and mobile responsiveness. Built and tested on a live 18-site network.">
+  <meta name="keywords" content="web audit tool, site audit, portfolio audit, navigation consistency, feature tracking, mobile responsiveness, multi-site management, QA automation">
+  <meta name="author" content="AITSQL">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://aitsql.com/audit.html">
+
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://aitsql.com/audit.html">
+  <meta property="og:title" content="Web Portfolio Audit Tool — AITSQL">
+  <meta property="og:description" content="Systematic audit tool for multi-site web portfolios. Built and tested on a live 18-site network.">
+  <meta property="og:site_name" content="AITSQL">
+
+  <meta name="theme-color" content="#0ea5e9">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Web Portfolio Audit Tool",
+    "url": "https://aitsql.com/audit.html",
+    "applicationCategory": "DeveloperApplication",
+    "description": "Systematic audit tool for multi-site web portfolios. Checks navigation consistency, missing pages, broken links, feature drift, and mobile responsiveness.",
+    "author": { "@type": "Organization", "name": "AITSQL" }
+  }
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+
+  <style>
+    /* Audit Page Specific Styles */
+    .audit-hero {
+      padding: 8rem 0 4rem;
+      text-align: center;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(14, 165, 233, 0.08), transparent),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(34, 197, 94, 0.04), transparent);
+    }
+    .audit-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+    }
+    .audit-hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--blue-bright), var(--green-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .audit-hero-sub {
+      font-size: 1.15rem;
+      color: var(--text-secondary);
+      max-width: 640px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.8;
+    }
+    .audit-hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Problem Section */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .problem-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.3s;
+    }
+    .problem-card:hover {
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: translateY(-3px);
+    }
+    .problem-icon {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .problem-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .problem-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* What It Checks */
+    .checks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+    }
+    .check-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    .check-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue-primary), var(--green-accent));
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .check-card:hover::before { opacity: 1; }
+    .check-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+    }
+    .check-num {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--blue-primary), var(--blue-deep));
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+    }
+    .check-card h3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .check-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    /* Case Study */
+    .case-study-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hover);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .case-study-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--blue-primary), var(--blue-bright), var(--green-accent));
+    }
+    .case-study-box h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .case-study-box p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .case-study-box p:last-child { margin-bottom: 0; }
+
+    /* Findings Grid */
+    .findings-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+    .finding-card {
+      background: rgba(14, 165, 233, 0.05);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+    .finding-stat {
+      font-family: var(--font-mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--blue-bright);
+      margin-bottom: 0.25rem;
+    }
+    .finding-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .finding-detail {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Code Sample */
+    .audit-code {
+      max-width: 720px;
+      margin: 2rem auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    .audit-code-bar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+    .audit-code-bar .dot-r { width: 10px; height: 10px; border-radius: 50%; background: #ef4444; }
+    .audit-code-bar .dot-y { width: 10px; height: 10px; border-radius: 50%; background: #f59e0b; }
+    .audit-code-bar .dot-g { width: 10px; height: 10px; border-radius: 50%; background: #22c55e; }
+    .audit-code-bar span {
+      margin-left: auto;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .audit-code pre {
+      padding: 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      overflow-x: auto;
+    }
+    .audit-code .kw { color: var(--blue-bright); }
+    .audit-code .fn { color: #a78bfa; }
+    .audit-code .str { color: var(--green-accent); }
+    .audit-code .cm { color: var(--text-muted); font-style: italic; }
+
+    /* Methodology */
+    .method-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-top: 2rem;
+    }
+    .method-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .method-step:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+    }
+    .method-step .step-icon {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+    .method-step h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+    .method-step p {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    /* Brand Separation */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .brand-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .brand-card:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-3px);
+    }
+    .brand-card .brand-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .brand-card h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .brand-card .brand-role {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--blue-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.75rem;
+    }
+    .brand-card p {
+      color: var(--text-secondary);
+      font-size: 0.88rem;
+      line-height: 1.7;
+    }
+    .brand-card.active {
+      border-color: var(--border-hover);
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.06), rgba(34, 197, 94, 0.04));
+    }
+
+    /* Quote */
+    .audit-quote {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 2rem 2.5rem;
+      margin: 2rem 0;
+      border-left: 4px solid var(--blue-primary);
+    }
+    .audit-quote p {
+      color: var(--text-primary);
+      font-size: 1.05rem;
+      font-style: italic;
+      margin-bottom: 0.5rem;
+      line-height: 1.7;
+    }
+    .audit-quote .attr {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-style: normal;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .audit-hero { padding: 7rem 0 3rem; }
+      .method-steps { grid-template-columns: repeat(2, 1fr); }
+      .brands-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 480px) {
+      .method-steps { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AIUNITES Webring -->
+  <style>.aiunites-bar{position:fixed;top:0;left:0;right:0;z-index:10000;background:linear-gradient(90deg,#0a0a0f,#1a1a2e);border-bottom:1px solid rgba(99,102,241,.3);padding:8px 0;font-size:12px}.aiunites-bar-content{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:12px;overflow-x:auto;scrollbar-width:none}.aiunites-bar-content::-webkit-scrollbar{display:none}.aiunites-bar a{color:rgba(255,255,255,.7);text-decoration:none;white-space:nowrap;transition:color .2s}.aiunites-bar a:hover{color:#fff}.aiunites-bar-brand{color:#6366f1!important;font-weight:600}.aiunites-bar-brand:hover{color:#818cf8!important}.aiunites-bar-divider{color:rgba(255,255,255,.2)}body{padding-top:36px!important}.nav{top:36px!important}</style>
+  <div class="aiunites-bar"><div class="aiunites-bar-content"><a href="https://aiunites.github.io/aiunites-site/" class="aiunites-bar-brand">◆ AIUNITES</a><span class="aiunites-bar-divider">|</span><a href="https://aiunites.github.io/aizines-app/">AIZines</a><a href="https://aiunites.github.io/aibyjob-demo/">AIByJob</a><a href="https://aiunites.github.io/redomy-demo/">Redomy</a><a href="https://aiunites.github.io/videobate-site/">VideoBate</a><a href="https://aiunites.github.io/voicestry-site/">VoiceStry</a><a href="https://aiunites.github.io/bodspas-site/">BodSpas</a><a href="https://aiunites.github.io/furnishthings-site/">FurnishThings</a><a href="https://aiunites.github.io/bizstry-site/">BizStry</a><a href="https://aiunites.github.io/aiyhwh-site/">AI YHWH</a><a href="https://aiunites.github.io/cloudsion-site/">Cloudsion</a><a href="https://aiunites.github.io/gameatica-site/">Gameatica</a><a href="https://aiunites.github.io/uptownit-site/">UptownIT</a><a href="https://aiunites.github.io/inthisworld-site/">InThisWorld</a><a href="https://aiunites.github.io/erpise-site/">ERPise</a><a href="https://aiunites.github.io/erpize-site/">ERPize</a><a href="https://aiunites.github.io/aitsql-site/" style="color:#fff!important;text-decoration:underline;text-underline-offset:3px;">AITSQL</a><a href="https://aiunites.github.io/cosmostheopera-site/">🌌 COSMOS</a></div></div>
+  <script>(function(){if(location.protocol==='file:'||location.hostname==='localhost'||location.hostname==='127.0.0.1'){document.querySelectorAll('.aiunites-bar a').forEach(a=>{if(!a.classList.contains('current'))a.href=a.href.replace('https://aiunites.github.io/','../')+'index.html';});}})()</script>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div class="container nav-container">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">AI</div>
+        <div class="logo-text">AITSQL<span>.com</span></div>
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html#tools">Tools</a>
+        <a href="audit.html" style="color: #38bdf8;">Audit Tool</a>
+        <a href="index.html#blog">Blog</a>
+        <a href="index.html#contact" class="btn-nav">Get in Touch</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="audit-hero">
+    <div class="container">
+      <div class="hero-badge fade-up">
+        <span class="dot"></span>
+        Audit & QA Tools
+      </div>
+      <h1 class="fade-up fade-up-d1">
+        Multi-Site <span class="gradient-text">Audit Tool</span>
+      </h1>
+      <p class="audit-hero-sub fade-up fade-up-d2">
+        Systematic validation for web portfolios. Check navigation consistency, missing pages, broken links, feature drift, and mobile responsiveness across every site — from a single audit run.
+      </p>
+      <div class="audit-hero-cta fade-up fade-up-d3">
+        <a href="#case-study" class="btn btn-primary">See the Case Study</a>
+        <a href="#methodology" class="btn btn-outline">Methodology</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">The Problem</div>
+        <h2>Multi-site portfolios drift silently</h2>
+        <p>The more sites you manage, the more things break without anyone noticing. No single page fails catastrophically — they just quietly diverge.</p>
+      </div>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">🧭</div>
+          <h3>Navigation Inconsistency</h3>
+          <p>Site A has 5 nav items. Site B has 3. Site C has a link to a page that was removed six months ago. Nobody checks because each site looks fine on its own.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">👻</div>
+          <h3>Feature Drift</h3>
+          <p>You add a feature to one site and forget to propagate it. Or you update a shared component and break it on three sites you didn't test. Features silently disappear.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📱</div>
+          <h3>Mobile Breakage</h3>
+          <p>A CSS change that looks fine on desktop hides the hamburger menu on mobile. The site appears to work — until someone tries to navigate on their phone.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🔗</div>
+          <h3>Dead Links & Missing Pages</h3>
+          <p>Cross-site links point to pages that were renamed or removed. Sitemaps reference URLs that return 404. Search engines crawl them and downgrade your authority.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📋</div>
+          <h3>No Validation Baseline</h3>
+          <p>Without a documented feature list, you can't verify what should be there. Changes happen, features disappear, and nobody can say when or why because there's no test plan.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🔄</div>
+          <h3>Shared Component Rot</h3>
+          <p>A webring, footer, or analytics tag exists on 18 sites in 18 different versions. Each site got the update at a different time. Some got it twice. Some never got it at all.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What It Checks -->
+  <section id="checks">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Audit Checks</div>
+        <h2>What the audit validates</h2>
+        <p>Eight categories of checks run against every site in the portfolio.</p>
+      </div>
+      <div class="checks-grid">
+        <div class="check-card">
+          <div class="check-num">1</div>
+          <h3>Navigation Consistency</h3>
+          <p>Verifies every page on every site has the same nav structure. Flags missing links, extra links, and mismatched labels across the portfolio.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">2</div>
+          <h3>Page Inventory</h3>
+          <p>Crawls each site's directory structure and compares it against the sitemap and UATEST plan. Identifies orphaned pages and missing entries.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">3</div>
+          <h3>Cross-Site Link Validation</h3>
+          <p>Tests every internal and cross-site link. Checks webring links, footer links, and in-page anchors for dead references.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">4</div>
+          <h3>Mobile Responsiveness</h3>
+          <p>Checks for <code style="color:var(--amber-accent);">display: none</code> on navigation elements, missing viewport meta tags, and broken mobile menu patterns.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">5</div>
+          <h3>Feature Drift Detection</h3>
+          <p>Compares each site's current state against its UATEST plan. Flags features that should exist but don't, and features that exist but aren't documented.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">6</div>
+          <h3>Shared Component Sync</h3>
+          <p>Validates that shared components (webring, analytics, footers, legal links) are identical across all sites. Diffs any mismatches.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">7</div>
+          <h3>SEO & Sitemap Validation</h3>
+          <p>Checks for meta titles, descriptions, canonical URLs, robots.txt, sitemap.xml presence, and validates sitemap URLs against actual pages.</p>
+        </div>
+        <div class="check-card">
+          <div class="check-num">8</div>
+          <h3>Accessibility Baseline</h3>
+          <p>Scans for missing alt attributes, aria labels on interactive elements, color contrast on critical text, and keyboard navigation basics.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Methodology -->
+  <section id="methodology" class="section-alt">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Methodology</div>
+        <h2>How it works</h2>
+        <p>Four phases. Document first, then validate, then fix, then verify.</p>
+      </div>
+      <div class="method-steps">
+        <div class="method-step">
+          <div class="step-icon">📋</div>
+          <h3>Document</h3>
+          <p>Create a UATEST plan for each site listing every feature, page, and integration point. This is your validation baseline.</p>
+        </div>
+        <div class="method-step">
+          <div class="step-icon">🔍</div>
+          <h3>Scan</h3>
+          <p>Run the audit script against the portfolio. It crawls every site, checks every link, compares every nav, and diffs shared components.</p>
+        </div>
+        <div class="method-step">
+          <div class="step-icon">📊</div>
+          <h3>Report</h3>
+          <p>Generate a findings report with issues categorized by severity. Navigation failures, dead links, feature drift, and mobile breaks — all flagged.</p>
+        </div>
+        <div class="method-step">
+          <div class="step-icon">✅</div>
+          <h3>Verify</h3>
+          <p>Fix the issues, then re-run the audit. Compare before and after. The UATEST plan gets updated. Nothing gets lost.</p>
+        </div>
+      </div>
+
+      <div class="audit-quote" style="margin-top: 3rem;">
+        <p>"Never delete a feature from the test plan. Mark it deprecated. History matters — you need to know what was there, what changed, and when."</p>
+        <div class="attr">— AITSQL audit methodology</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Case Study -->
+  <section id="case-study">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-label">Case Study</div>
+        <h2>Tested on a live 18-site network</h2>
+        <p>We built this tool by auditing a real portfolio. Here's what it found.</p>
+      </div>
+
+      <div class="case-study-box">
+        <h3>AIUNITES Network — 18 Sites, One Audit</h3>
+        <p>AIUNITES is a network of 18 interconnected web applications sharing a common database, design language, and webring navigation. The sites range from full-stack applications with authentication systems to single-page landing sites. They share CSS conventions, JavaScript patterns, and cross-site links.</p>
+        <p>Before the audit tool, updates happened site-by-site. Features would get added to one site and not propagated to others. The webring existed in 18 slightly different versions. Navigation structures diverged. Mobile menus broke. Nobody could say with certainty which sites had which features.</p>
+        <p>We built the audit tool to answer a simple question: <strong>what's actually deployed, and does it match what should be deployed?</strong></p>
+      </div>
+
+      <div class="findings-grid">
+        <div class="finding-card">
+          <div class="finding-stat">18</div>
+          <div class="finding-label">Sites Audited</div>
+          <div class="finding-detail">Full-stack apps, content sites, and landing pages — all checked in a single run</div>
+        </div>
+        <div class="finding-card">
+          <div class="finding-stat">4</div>
+          <div class="finding-label">Nav Inconsistencies</div>
+          <div class="finding-detail">Pages with different menu items than the rest of their site — some missing links, some with extras</div>
+        </div>
+        <div class="finding-card">
+          <div class="finding-stat">3</div>
+          <div class="finding-label">Webring Versions</div>
+          <div class="finding-detail">Three different versions of the shared webring deployed across 18 sites — some missing new sites</div>
+        </div>
+        <div class="finding-card">
+          <div class="finding-stat">18/18</div>
+          <div class="finding-label">UATEST Plans Created</div>
+          <div class="finding-detail">Every site now has a documented feature baseline that gets validated before and after changes</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sample Output -->
+  <section class="section-alt">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Sample Output</div>
+        <h2>What the report looks like</h2>
+        <p>Clean, actionable output — not a wall of false positives.</p>
+      </div>
+
+      <div class="audit-code">
+        <div class="audit-code-bar">
+          <div class="dot-r"></div>
+          <div class="dot-y"></div>
+          <div class="dot-g"></div>
+          <span>audit-report.txt</span>
+        </div>
+        <pre><code><span class="cm">── AIUNITES Portfolio Audit ─────────────────────</span>
+<span class="cm">   18 sites | 67 pages | 312 links checked</span>
+
+<span class="kw">NAVIGATION CONSISTENCY</span>
+  <span class="str">✓ bodspas-site/index.html</span>     Home | BodWave | Press
+  <span class="str">✓ bodspas-site/bodwave.html</span>   Home | BodWave | Press
+  <span class="str">✓ bodspas-site/press.html</span>     Home | BodWave | Press
+  <span class="str">✓ bodspas-site/gallery.html</span>   Home | BodWave | Press
+
+<span class="kw">WEBRING SYNC</span>
+  <span class="fn">⚠ gallery.html</span>  missing: VoiceStry, AITSQL
+  <span class="fn">⚠ index.html</span>    missing emoji on BodSpas link
+  <span class="str">✓ bodwave.html</span>  matches reference
+  <span class="str">✓ press.html</span>    matches reference
+
+<span class="kw">MOBILE RESPONSIVENESS</span>
+  <span class="str">✓ No display:none on nav elements</span>
+  <span class="str">✓ Viewport meta present on all pages</span>
+  <span class="str">✓ Mobile toggle button found on all pages</span>
+
+<span class="kw">SITEMAP VALIDATION</span>
+  <span class="str">✓ 4 URLs in sitemap, 4 pages found</span>
+  <span class="str">✓ All sitemap URLs resolve</span>
+
+<span class="cm">── Summary: 2 warnings, 0 errors ───────────────</span></code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Independence -->
+  <section id="independence">
+    <div class="container">
+      <div class="section-header center">
+        <div class="section-label">Independence</div>
+        <h2>The tool audits systems, not companies</h2>
+        <p>Audit, integration, and editorial are separate brands with separate purposes.</p>
+      </div>
+
+      <div class="brands-grid">
+        <div class="brand-card">
+          <div class="brand-icon">🔧</div>
+          <h3>ERPise</h3>
+          <div class="brand-role">Integration & Consulting</div>
+          <p>Hands-on implementation. Jenzabar systems, SQL Server, SSIS, SSRS. The team that builds and fixes.</p>
+        </div>
+        <div class="brand-card active">
+          <div class="brand-icon">⚡</div>
+          <h3>AITSQL</h3>
+          <div class="brand-role">Audit & Tools</div>
+          <p>Independent validation. The tool runs checks and produces reports. What you do with the findings is up to you.</p>
+        </div>
+        <div class="brand-card">
+          <div class="brand-icon">📰</div>
+          <h3>ERPize</h3>
+          <div class="brand-role">Editorial & Magazine</div>
+          <p>Industry coverage. Methodology articles, case studies, and technical briefs. Journalism, not sales.</p>
+        </div>
+      </div>
+
+      <div class="audit-quote" style="margin-top: 2.5rem;">
+        <p>"The people who build the system shouldn't be the same people who audit it. AITSQL audits systems — it doesn't sell services. What it finds, it reports. No conflict."</p>
+        <div class="attr">— Brand separation principle</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="container">
+      <h2>Run an audit on your portfolio.</h2>
+      <p>Whether it's 3 sites or 30, the methodology scales. Start with documentation, end with confidence.</p>
+      <a href="mailto:tom@aitsql.com" class="btn btn-primary">Get in Touch →</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          AITSQL.com <span>Audit & Tools</span>
+        </div>
+        <div class="footer-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#tools">Tools</a>
+          <a href="audit.html">Audit Tool</a>
+          <a href="index.html#blog">Blog</a>
+        </div>
+      </div>
+      <div class="footer-legal">
+        <div class="disclaimer">
+          <strong>⚠️ Pre-Launch Preview:</strong> The Web Portfolio Audit Tool is currently in development. Features shown are previews and may change before official launch.
+        </div>
+        <p class="copyright">&copy; 2026 AITSQL.com. All rights reserved. Part of the <a href="https://aiunites.github.io/aiunites-site/" style="color:var(--blue-bright);">AIUNITES</a> network.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 50);
+    });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Fade-in observer
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.problem-card, .check-card, .method-step, .brand-card, .finding-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'all 0.5s ease';
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
