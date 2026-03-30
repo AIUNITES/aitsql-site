@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#060c18"/>
+  <rect width="1200" height="630" fill="url(#grad)"/>
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0ea5e9;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0.1"/>
+    </linearGradient>
+  </defs>
+  <text x="600" y="240" font-family="system-ui,sans-serif" font-size="80" font-weight="800" fill="#0ea5e9" text-anchor="middle">AITSQL</text>
+  <text x="600" y="330" font-family="system-ui,sans-serif" font-size="32" fill="#94a3b8" text-anchor="middle">AI-Powered SQL Server Tools &amp; Consulting</text>
+  <text x="600" y="400" font-family="system-ui,sans-serif" font-size="24" fill="#64748b" text-anchor="middle">T-SQL · SSRS · SSIS · Query Optimization</text>
+  <text x="600" y="560" font-family="system-ui,sans-serif" font-size="18" fill="#475569" text-anchor="middle">aitsql.com · Part of the AIUNITES Network</text>
+</svg>
